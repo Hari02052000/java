@@ -4,292 +4,357 @@ import jakarta.persistence.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 @Table(name = "employee_table")
 public class Employee {
 
-    public enum GenderEnum {
-        Male,
-        Female,
-        Other
-    }
+  public enum GenderEnum {
+    Male,
+    Female,
+    Other
+  }
 
-    public enum MarriageStatusEnum {
-        single,
-        married,
-        divorced
-    }
+  public enum MarriageStatusEnum {
+    single,
+    married,
+    divorced
+  }
 
-    public enum BloodGroupEnum {
-        A_POS,
-        A_NEG,
-        B_POS,
-        B_NEG,
-        AB_POS,
-        AB_NEG,
-        O_POS,
-        O_NEG
-    }
+  public enum BloodGroupEnum {
+    A_POS,
+    A_NEG,
+    B_POS,
+    B_NEG,
+    AB_POS,
+    AB_NEG,
+    O_POS,
+    O_NEG
+  }
 
-    @Id
-    @Column(name = "employee_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long employeeId;
+  private enum ValidationFieldsEnum {
+    FIRST_NAME,
+    LAST_NAME,
+    EMAIL,
+    PHONE_NUMBER,
+    PASSWORD
+  }
 
-    @Column(nullable = false)
-    private String firstName;
+  @Id
+  @Column(name = "employee_id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long employeeId;
 
-    @Column(nullable = false)
-    private String lastName;
+  @Column(nullable = false)
+  private String firstName;
 
-    @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
+  @Column(nullable = false)
+  private String lastName;
 
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
+  @Enumerated(EnumType.STRING)
+  private GenderEnum gender;
 
-    @Temporal(TemporalType.DATE)
-    private Date hireDate;
+  @Temporal(TemporalType.DATE)
+  private Date dateOfBirth;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+  @Temporal(TemporalType.DATE)
+  private Date hireDate;
 
-    @Enumerated(EnumType.STRING)
-    private MarriageStatusEnum marriageStatus;
+  @Column(nullable = false, unique = true)
+  private String email;
 
-    @Enumerated(EnumType.STRING)
-    private BloodGroupEnum bloodGroup;
+  @Enumerated(EnumType.STRING)
+  private MarriageStatusEnum marriageStatus;
 
-    @Column(nullable = false,unique = true)
-    private String phoneNumber;
+  @Enumerated(EnumType.STRING)
+  private BloodGroupEnum bloodGroup;
 
-    private String nationalId;
+  @Column(nullable = false, unique = true)
+  private String phoneNumber;
 
-    private String passportNumber;
+  private String nationalId;
 
-    private String bankAccount;
+  private String passportNumber;
 
-    private String taxIdentificationNumber;
+  private String bankAccount;
 
-    private Float salary;
+  private String taxIdentificationNumber;
 
-    private String departmentId;
+  private Float salary;
 
-    private String jobPosition;
+  private String departmentId;
 
-    private String addressId;
+  private String jobPosition;
 
-    @Column(nullable = false)
-    private Boolean isWorking = true;
+  private String addressId;
 
-    @Temporal(TemporalType.DATE)
-    private Date lastWorkingDay;
+  @Column(nullable = false)
+  private Boolean isWorking = true;
 
-    @Column(columnDefinition = "TEXT")
-    private String profilePictureUrl;
+  @Temporal(TemporalType.DATE)
+  private Date lastWorkingDay;
 
-    @Column(nullable = false)
-    private String password;
+  @Column(columnDefinition = "TEXT")
+  private String profilePictureUrl;
 
-    public Employee(){}
-    public Employee(String firstName, String lastName, String email, String phoneNumber, String password) {
-        if (isBlank(firstName) || isBlank(lastName) || isBlank(email) || isBlank(phoneNumber) || isBlank(password)) {
-            throw new IllegalArgumentException("Fields cannot be blank");
+  @Column(nullable = false)
+  private String password;
+
+  public Employee() {}
+
+  public Employee(
+      String firstName, String lastName, String email, String phoneNumber, String password) {
+    this.setFirstName(firstName);
+    this.setLastName(lastName);
+    this.setEmail(email);
+    this.setPhoneNumber(phoneNumber);
+    this.setPassword(password);
+  }
+
+  private boolean isBlank(String str) {
+    return Objects.requireNonNullElse(str, "").isBlank();
+  }
+
+  private boolean validate(ValidationFieldsEnum fields, String str) {
+    switch (fields) {
+      case EMAIL:
+        if (isBlank(str)) {
+          return true;
+        } else {
+          throw new IllegalArgumentException("given" + str + "is not a valid email");
+        }
+      case FIRST_NAME:
+        if (isBlank(str)) {
+          return true;
+        } else {
+          throw new IllegalArgumentException("given" + str + "is not a valid first name");
         }
 
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-    }
+      case LAST_NAME:
+        if (isBlank(str)) {
+          return true;
+        } else {
+          throw new IllegalArgumentException("given" + str + "is not a valid last name");
+        }
 
-    private boolean isBlank(String str) {
-        return str == null || str.trim().isEmpty();
+      case PASSWORD:
+        if (isBlank(str)) {
+          return true;
+        } else {
+          throw new IllegalArgumentException("please create a valid password");
+        }
+
+      case PHONE_NUMBER:
+        if (isBlank(str)) {
+          return true;
+        } else {
+          throw new IllegalArgumentException("given" + str + "is not a valid phone number");
+        }
     }
-    
-       public Long getEmployeeId(){
-        return this.employeeId;
-     } 
-   public  String getFirstName(){
-        return this.firstName;
-     } 
-   public  Void setFirstName(String FirstName){
-       this.isBlank(FirstName);
-        this.firstName =  FirstName;
-        return null;
-     }
-   public  String getLastName(){
-        return this.lastName;
-     } 
-   public  void setLastName(String LastName){
-        this.isBlank(LastName);
-        this.lastName = LastName;
-     } 
-   public  GenderEnum getGender(){
-        return this.gender;
-     } 
-   public  Void setGender(GenderEnum Gender){
-        this.gender = Gender;
-        return null;
-     }  
-    public Date getDateOfBirth(){
-       return this.dateOfBirth;
-     }
-   public  Void setDateOfBirth(Date DateOfBirth){
-        this.dateOfBirth = DateOfBirth;
-        return null;
-     }
-   public  String getPassword(){
-      return this.password;
-     }
-   public  Void setPassword(String Password){
-      this.password = Password;
-      return null;
-     }
-   public  Date getHireDate(){
-        return this.hireDate;
-     }   
-   public  Void setHireDate(Date hireDate){
-        this.hireDate = hireDate;
-        return null;
-     }   
-   public  String getEmail(){
-        return this.email;
-     }
-  public  Void setEmail(String Email){
-      this.isBlank(Email);
-        this.email = Email;
-        return null;
-     }
- public  MarriageStatusEnum getMarriageStatus(){
-        return this.marriageStatus;
-     }
-  public Void setMarriageStatus(MarriageStatusEnum MarriageStatus){
-        this.marriageStatus = MarriageStatus;
-        return null;
-     }
-  public  BloodGroupEnum getBloodGroup(){
-        return this.bloodGroup;
-     }
-  public Void setBloodGroup(BloodGroupEnum bloodGroup){
-        this.bloodGroup = bloodGroup;
-        return null;
-    }
-   public  String getPhoneNumber(){
-        return this.phoneNumber;
-     }
- public  Void setPhoneNumber(String phoneNumber){
-       this.isBlank(phoneNumber);
-        this.phoneNumber = phoneNumber;
-        return null;
-    }
-  public   String getNationalId(){
-        return this.nationalId;
-     }
-  public  Void setNationalId(String NationalId){
-       this.isBlank(NationalId);
-        this.nationalId = NationalId;
-        return null;
-     }
-   public  String getPassportNumber(){
-        return this.passportNumber;
-     }
-   public  Void setPassportNumber(String PassportNumber){
-      this.isBlank(PassportNumber);
-        this.passportNumber = PassportNumber;
-        return null;
-     }
-   public String getBankAccount(){
-        return this.bankAccount;
-     }
-   public Void setBankAccount(String BankAccount){
-        this.isBlank(BankAccount);
-        this.bankAccount = BankAccount;
-        return null;
-     }
-   public  String TaxIdentificationNumber(){
-        return this.taxIdentificationNumber;
-     } 
-   public  Void setTaxIdentificationNumber(String taxNumber){
-        this.isBlank(taxNumber);
-        this.taxIdentificationNumber = taxNumber;
-        return null;
-     } 
-   public  Float getSalary(){
-        return this.salary;
-     }
-   public  Void setSalary(Float Salary){
-        this.salary = Salary;
-        return null;
-     }
-   public  String getDepartmentId(){
-        return this.departmentId;
-     }
-   public  Void setDepartmentId(String departmentId){
-        this.isBlank(departmentId);
-        this.departmentId = departmentId;
-        return null;
-     }
-   public  String getJobPosition(){
-        return this.jobPosition;
-     }
-   public  Void setJobPosition(String jobPosition){
-      this.isBlank(jobPosition);
-       this.jobPosition = jobPosition;
-       return null;
-     }
-  public   String getAddressId(){
-        return this.addressId;
-     }
-   public  Void setAddressId(String addressId){
-      this.isBlank(addressId);
-        this.addressId = addressId;
-        return null;
-     }
-   public  Boolean getIsWorking(){
-        return this.isWorking;
-     }
-   public  Void setIsWorking(Boolean isWorking){
-        this.isWorking = isWorking;
-        return null;
-     }
-    public Date getLastWorkingDay(){
-        return this.lastWorkingDay;
-     } 
-    public Void setLastWorkingDay(Date LastWorkingDay){
-        this.lastWorkingDay = LastWorkingDay;
-        return null;
-     } 
-   public  String getProfilePictureUrl(){
-        return this.profilePictureUrl;
-     }
-   public  Void setProfilePictureUrl(String ProfilePictureUrl){
-      this.isBlank(ProfilePictureUrl);
-        this.profilePictureUrl = ProfilePictureUrl;
-        return null;
-     }
-   public Map<String,Object>getEmployeeDetails(){
-        Map<String, Object> employeeDetails = new HashMap<>();
-        employeeDetails.put("employee_id", this.employeeId);
-        employeeDetails.put("firstName", this.firstName);
-        employeeDetails.put("lastName", this.lastName);
-        employeeDetails.put("gender", this.gender);
-        employeeDetails.put("dateOfBirth", this.dateOfBirth);
-        employeeDetails.put("hireDate", this.hireDate);
-        employeeDetails.put("email", this.email);
-        employeeDetails.put("profilePictureUrl", this.profilePictureUrl);
-        employeeDetails.put("lastWorkingDay", this.lastWorkingDay);
-        employeeDetails.put("jobPosition", this.jobPosition);
-        employeeDetails.put("marriageStatus", this.marriageStatus);
-        employeeDetails.put("salary", this.salary);
-        employeeDetails.put("taxIdentificationNumber", this.taxIdentificationNumber);
-        employeeDetails.put("bankAccount", this.bankAccount);
-        employeeDetails.put("passportNumber", this.passportNumber);
-        employeeDetails.put("nationalId", this.nationalId);
-        employeeDetails.put("phoneNumber", this.phoneNumber);
-        employeeDetails.put("bloodGroup", this.bloodGroup);
-       return employeeDetails; 
-   }
+    throw new IllegalArgumentException("invalid options");
+  }
+
+  public Long getEmployeeId() {
+    return this.employeeId;
+  }
+
+  public String getFirstName() {
+    return this.firstName;
+  }
+
+  public void setFirstName(String FirstName) {
+    this.validate(ValidationFieldsEnum.FIRST_NAME, firstName);
+    this.firstName = FirstName;
+  }
+
+  public String getLastName() {
+    return this.lastName;
+  }
+
+  public void setLastName(String LastName) {
+    this.validate(ValidationFieldsEnum.LAST_NAME, LastName);
+    this.lastName = LastName;
+  }
+
+  public GenderEnum getGender() {
+    return this.gender;
+  }
+
+  public void setGender(GenderEnum Gender) {
+    this.gender = Gender;
+  }
+
+  public Date getDateOfBirth() {
+    return this.dateOfBirth;
+  }
+
+  public void setDateOfBirth(Date DateOfBirth) {
+    this.dateOfBirth = DateOfBirth;
+  }
+
+  public String getPassword() {
+    return this.password;
+  }
+
+  public void setPassword(String Password) {
+    this.password = Password;
+  }
+
+  public Date getHireDate() {
+    return this.hireDate;
+  }
+
+  public void setHireDate(Date hireDate) {
+    this.hireDate = hireDate;
+  }
+
+  public String getEmail() {
+    return this.email;
+  }
+
+  public void setEmail(String Email) {
+    this.validate(ValidationFieldsEnum.EMAIL, Email);
+    this.email = Email;
+  }
+
+  public MarriageStatusEnum getMarriageStatus() {
+    return this.marriageStatus;
+  }
+
+  public void setMarriageStatus(MarriageStatusEnum MarriageStatus) {
+    this.marriageStatus = MarriageStatus;
+  }
+
+  public BloodGroupEnum getBloodGroup() {
+    return this.bloodGroup;
+  }
+
+  public void setBloodGroup(BloodGroupEnum bloodGroup) {
+    this.bloodGroup = bloodGroup;
+  }
+
+  public String getPhoneNumber() {
+    return this.phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.validate(ValidationFieldsEnum.PHONE_NUMBER, phoneNumber);
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getNationalId() {
+    return this.nationalId;
+  }
+
+  public void setNationalId(String NationalId) {
+    this.isBlank(NationalId);
+    this.nationalId = NationalId;
+  }
+
+  public String getPassportNumber() {
+    return this.passportNumber;
+  }
+
+  public void setPassportNumber(String PassportNumber) {
+    this.passportNumber = PassportNumber;
+  }
+
+  public String getBankAccount() {
+    return this.bankAccount;
+  }
+
+  public void setBankAccount(String BankAccount) {
+    this.bankAccount = BankAccount;
+  }
+
+  public String TaxIdentificationNumber() {
+    return this.taxIdentificationNumber;
+  }
+
+  public void setTaxIdentificationNumber(String taxNumber) {
+    this.taxIdentificationNumber = taxNumber;
+  }
+
+  public Float getSalary() {
+    return this.salary;
+  }
+
+  public void setSalary(Float Salary) {
+    this.salary = Salary;
+  }
+
+  public String getDepartmentId() {
+    return this.departmentId;
+  }
+
+  public void setDepartmentId(String departmentId) {
+    this.isBlank(departmentId);
+    this.departmentId = departmentId;
+  }
+
+  public String getJobPosition() {
+    return this.jobPosition;
+  }
+
+  public void setJobPosition(String jobPosition) {
+    this.jobPosition = jobPosition;
+  }
+
+  public String getAddressId() {
+    return this.addressId;
+  }
+
+  public void setAddressId(String addressId) {
+    this.isBlank(addressId);
+    this.addressId = addressId;
+  }
+
+  public Boolean getIsWorking() {
+    return this.isWorking;
+  }
+
+  public void setIsWorking(Boolean isWorking) {
+    this.isWorking = isWorking;
+  }
+
+  public Date getLastWorkingDay() {
+    return this.lastWorkingDay;
+  }
+
+  public void setLastWorkingDay(Date LastWorkingDay) {
+    this.lastWorkingDay = LastWorkingDay;
+  }
+
+  public String getProfilePictureUrl() {
+    return this.profilePictureUrl;
+  }
+
+  public void setProfilePictureUrl(String ProfilePictureUrl) {
+    this.isBlank(ProfilePictureUrl);
+    this.profilePictureUrl = ProfilePictureUrl;
+  }
+
+  public Map<String, Object> getEmployeeDetails() {
+    Map<String, Object> employeeDetails = new HashMap<>();
+    employeeDetails.put("employee_id", this.employeeId);
+    employeeDetails.put("firstName", this.firstName);
+    employeeDetails.put("lastName", this.lastName);
+    employeeDetails.put("gender", this.gender);
+    employeeDetails.put("dateOfBirth", this.dateOfBirth);
+    employeeDetails.put("hireDate", this.hireDate);
+    employeeDetails.put("email", this.email);
+    employeeDetails.put("profilePictureUrl", this.profilePictureUrl);
+    employeeDetails.put("lastWorkingDay", this.lastWorkingDay);
+    employeeDetails.put("jobPosition", this.jobPosition);
+    employeeDetails.put("marriageStatus", this.marriageStatus);
+    employeeDetails.put("salary", this.salary);
+    employeeDetails.put("taxIdentificationNumber", this.taxIdentificationNumber);
+    employeeDetails.put("bankAccount", this.bankAccount);
+    employeeDetails.put("passportNumber", this.passportNumber);
+    employeeDetails.put("nationalId", this.nationalId);
+    employeeDetails.put("phoneNumber", this.phoneNumber);
+    employeeDetails.put("bloodGroup", this.bloodGroup);
+    return employeeDetails;
+  }
 }
