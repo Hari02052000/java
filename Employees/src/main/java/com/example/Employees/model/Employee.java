@@ -80,8 +80,9 @@ public class Employee {
   private String bankAccount;
 
   private String taxIdentificationNumber;
-
-  private Float salary;
+  
+  @Column(nullable = false)
+  private double salary = 0.0;
 
   private String departmentId;
 
@@ -90,7 +91,7 @@ public class Employee {
   private String addressId;
 
   @Column(nullable = false)
-  private Boolean isWorking = true;
+  private boolean isWorking = true;
 
   @Temporal(TemporalType.DATE)
   private Date lastWorkingDay;
@@ -120,36 +121,36 @@ public class Employee {
     switch (fields) {
       case EMAIL:
         if (isBlank(str)) {
-          return true;
-        } else {
           throw new IllegalArgumentException("given" + str + "is not a valid email");
+        } else {
+          return true;
         }
       case FIRST_NAME:
         if (isBlank(str)) {
-          return true;
-        } else {
           throw new IllegalArgumentException("given" + str + "is not a valid first name");
+        } else {
+          return true;
         }
 
       case LAST_NAME:
         if (isBlank(str)) {
-          return true;
-        } else {
           throw new IllegalArgumentException("given" + str + "is not a valid last name");
+        } else {
+          return true;
         }
 
       case PASSWORD:
         if (isBlank(str)) {
-          return true;
-        } else {
           throw new IllegalArgumentException("please create a valid password");
+        } else {
+          return true;
         }
 
       case PHONE_NUMBER:
         if (isBlank(str)) {
-          return true;
-        } else {
           throw new IllegalArgumentException("given" + str + "is not a valid phone number");
+        } else {
+          return true;
         }
     }
     throw new IllegalArgumentException("invalid options");
@@ -163,42 +164,42 @@ public class Employee {
     return this.firstName;
   }
 
-  public void setFirstName(String FirstName) {
+  public void setFirstName(String firstName) {
     this.validate(ValidationFieldsEnum.FIRST_NAME, firstName);
-    this.firstName = FirstName;
+    this.firstName = firstName;
   }
 
   public String getLastName() {
     return this.lastName;
   }
 
-  public void setLastName(String LastName) {
-    this.validate(ValidationFieldsEnum.LAST_NAME, LastName);
-    this.lastName = LastName;
+  public void setLastName(String lastName) {
+    this.validate(ValidationFieldsEnum.LAST_NAME, lastName);
+    this.lastName = lastName;
   }
 
   public GenderEnum getGender() {
     return this.gender;
   }
 
-  public void setGender(GenderEnum Gender) {
-    this.gender = Gender;
+  public void setGender(GenderEnum gender) {
+    this.gender = gender;
   }
 
   public Date getDateOfBirth() {
     return this.dateOfBirth;
   }
 
-  public void setDateOfBirth(Date DateOfBirth) {
-    this.dateOfBirth = DateOfBirth;
+  public void setDateOfBirth(Date dateOfBirth) {
+    this.dateOfBirth = dateOfBirth;
   }
 
   public String getPassword() {
     return this.password;
   }
 
-  public void setPassword(String Password) {
-    this.password = Password;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public Date getHireDate() {
@@ -213,17 +214,17 @@ public class Employee {
     return this.email;
   }
 
-  public void setEmail(String Email) {
-    this.validate(ValidationFieldsEnum.EMAIL, Email);
-    this.email = Email;
+  public void setEmail(String email) {
+    this.validate(ValidationFieldsEnum.EMAIL, email);
+    this.email = email;
   }
 
   public MarriageStatusEnum getMarriageStatus() {
     return this.marriageStatus;
   }
 
-  public void setMarriageStatus(MarriageStatusEnum MarriageStatus) {
-    this.marriageStatus = MarriageStatus;
+  public void setMarriageStatus(MarriageStatusEnum marriageStatus) {
+    this.marriageStatus = marriageStatus;
   }
 
   public BloodGroupEnum getBloodGroup() {
@@ -247,25 +248,24 @@ public class Employee {
     return this.nationalId;
   }
 
-  public void setNationalId(String NationalId) {
-    this.isBlank(NationalId);
-    this.nationalId = NationalId;
+  public void setNationalId(String nationalId) {
+    this.nationalId = nationalId;
   }
 
   public String getPassportNumber() {
     return this.passportNumber;
   }
 
-  public void setPassportNumber(String PassportNumber) {
-    this.passportNumber = PassportNumber;
+  public void setPassportNumber(String passportNumber) {
+    this.passportNumber = passportNumber;
   }
 
   public String getBankAccount() {
     return this.bankAccount;
   }
 
-  public void setBankAccount(String BankAccount) {
-    this.bankAccount = BankAccount;
+  public void setBankAccount(String bankAccount) {
+    this.bankAccount = bankAccount;
   }
 
   public String TaxIdentificationNumber() {
@@ -276,12 +276,12 @@ public class Employee {
     this.taxIdentificationNumber = taxNumber;
   }
 
-  public Float getSalary() {
+  public double getSalary() {
     return this.salary;
   }
 
-  public void setSalary(Float Salary) {
-    this.salary = Salary;
+  public void setSalary(double salary) {
+    this.salary = salary;
   }
 
   public String getDepartmentId() {
@@ -314,7 +314,7 @@ public class Employee {
     return this.isWorking;
   }
 
-  public void setIsWorking(Boolean isWorking) {
+  public void setIsWorking(boolean isWorking) {
     this.isWorking = isWorking;
   }
 

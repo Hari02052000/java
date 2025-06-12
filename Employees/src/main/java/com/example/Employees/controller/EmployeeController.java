@@ -3,6 +3,8 @@ package com.example.Employees.controller;
 import com.example.Employees.model.Employee;
 import com.example.Employees.service.EmployeeService;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +23,24 @@ public class EmployeeController {
   @Autowired private EmployeeService employeeService;
 
   @PostMapping
-  public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+  public ResponseEntity<Map<String, Object>> createEmployee(@RequestBody Employee employee) {
     Employee saved = this.employeeService.createEmployee(employee);
-    return ResponseEntity.status(HttpStatus.OK).body(saved);
+    return ResponseEntity.status(HttpStatus.OK).body(saved.getEmployeeDetails());
   }
 
   @GetMapping
-  public ResponseEntity<List<Employee>> getEmployees() {
+  public ResponseEntity<List<Map<String, Object>>> getEmployees() {
     List<Employee> employees = this.employeeService.getAllEmployee();
-    return ResponseEntity.status(HttpStatus.OK).body(employees);
+        List<Map<String, Object>> employeeDetailsList = employees.stream()
+        .map(Employee::getEmployeeDetails)
+        .toList(); 
+    return ResponseEntity.status(HttpStatus.OK).body(employeeDetailsList);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Employee> getEmployeeById(@PathVariable String id) {
+  public ResponseEntity<Map<String, Object>> getEmployeeById(@PathVariable String id) {
     Employee employee = employeeService.getEmployeeById(id);
-    return ResponseEntity.status(HttpStatus.OK).body(employee);
+    return ResponseEntity.status(HttpStatus.OK).body(employee.getEmployeeDetails());
   }
 
   @DeleteMapping("/{id}")
